@@ -26,7 +26,7 @@ Color getColor(Line line) {
     case Line.CE : return Colors.yellow.withOpacity(0.9);
     case Line.Red : return Colors.red.withOpacity(0.9);
     case Line.Purple: return Colors.purple.withOpacity(0.9);
-    case Line.Brown: return Color(0xFFB37A4C).withOpacity(0.95);//5C4033
+    case Line.Brown: return Color(0xFFB37A4C).withOpacity(0.9);
     default : return Colors.grey.withOpacity(0.5);
   }
 }

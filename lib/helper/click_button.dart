@@ -13,8 +13,10 @@ int? _start;
 void _changePathColor(ClickButton widget, Dijkstra alg) {
   int current = widget.getStationId();
   while (current != max) {
-    Stations.changeColor(current);
+    alg.changeStartColor(current);
+    alg.changeColor(current);
     current = alg.parentTree[current];
+
   }
 }
 
@@ -23,12 +25,14 @@ class ClickButton extends StatefulWidget {
   double? _x;
   double? _y;
   Function? notifyParent;
+  Function? callbackFunction;
 
-  ClickButton(double x, double y, int stationId, Function? notifyParent) {
+  ClickButton(double x, double y, int stationId, Function? notifyParent, Function? callbackFunction) {
     this._stationId = stationId;
     this._x = x;
     this._y = y;
     this.notifyParent = notifyParent;
+    this.callbackFunction = callbackFunction;
 
   }
 
@@ -74,12 +78,13 @@ class _ClickButtonState extends State<ClickButton> {
                 _start = null;
                 widget.notifyParent!();
                 _colored = false;
+                widget.callbackFunction!(0, 0.0);
               }),
             } else {
               setState(() {
                 _count++;
                 _start = widget._stationId;
-                Stations.changeColor(widget._stationId!);
+                Stations.changeNodeColor(widget._stationId!);
                 _first = Stations.stations[widget._stationId!];
               }),
             },
@@ -90,17 +95,17 @@ class _ClickButtonState extends State<ClickButton> {
                 _count--;
                 Stations.resetColor(widget._stationId!);
                 _start = null;
+                widget.callbackFunction!(0, 0.0);
               }),
             } else if (_first != _defaultStation) {
               setState(() {
                 _count--;
-                Stations.changeColor(widget._stationId!);
                 _first = _defaultStation;
                 _colored = true;
                 Dijkstra alg = Dijkstra();
                 int a = alg.shortestPathTime(_start!, widget._stationId!);
-                print(a);
                 _changePathColor(widget, alg);
+                widget.callbackFunction!(a, 0.5);
                 widget.notifyParent!();
               }),
             }

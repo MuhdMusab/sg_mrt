@@ -9,12 +9,10 @@ class Station extends LinkedListEntry<Station> implements Comparable<Station>{
   final List<Line>? lines;
   final int? id;
   int priority = max;
-  Station? parent;
   Station({
     this.name,
     this.lines,
     this.id,
-    //this.parent,
   });
 
   @override
@@ -23,7 +21,7 @@ class Station extends LinkedListEntry<Station> implements Comparable<Station>{
      return 1;
    } else if (this.priority < other.priority) {
      return -1;
-   } else if (this.name == other.name) {//(this.priority == other.priority && this.name == other.name){
+   } else if (this.name == other.name) {
      return 0;
    } else {
      return 1;

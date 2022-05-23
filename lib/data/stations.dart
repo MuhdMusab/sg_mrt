@@ -13,18 +13,18 @@ class Stations {
     Station(name: "Boon Lay", lines: [Line.Green], id: 6),
     Station(name: "Lakeside", lines: [Line.Green], id: 7),
     Station(name: "Chinese Garden", lines: [Line.Green], id: 8),
-    Station(name: "Jurong East", lines: [Line.Green, Line.Red], id: 9),
+    Station(name: "Jurong East", lines: [Line.Red, Line.Green], id: 9),
     Station(name: "Clementi", lines: [Line.Green], id: 10),
     Station(name: "Dover", lines: [Line.Green], id: 11),
-    Station(name: "Buona Vista", lines: [Line.Green, Line.Yellow], id: 12),
+    Station(name: "Buona Vista", lines: [Line.Yellow, Line.Green], id: 12),
     Station(name: "Commonwealth", lines: [Line.Green], id: 13),
     Station(name: "Queenstown", lines: [Line.Green], id: 14),
     Station(name: "Redhill", lines: [Line.Green], id: 15),
     Station(name: "Tiong Bahru", lines: [Line.Green], id: 16),
     Station(name: "Outram Park", lines: [Line.Green, Line.Purple], id: 17),
     Station(name: "Tanjong Pagar", lines: [Line.Green], id: 18),
-    Station(name: "Raffles Place", lines: [Line.Green, Line.Red], id: 19),
-    Station(name: "City Hall", lines: [Line.Green, Line.Red], id: 20),
+    Station(name: "Raffles Place", lines: [Line.Red, Line.Green], id: 19),
+    Station(name: "City Hall", lines: [Line.Red, Line.Green], id: 20),
     Station(name: "Bugis", lines: [Line.Green, Line.Blue], id: 21),
     Station(name: "Lavender", lines: [Line.Green], id: 22),
     Station(name: "Kallang", lines: [Line.Green], id: 23),
@@ -80,16 +80,16 @@ class Stations {
     Station(name: "Caldecott", lines: [Line.Yellow, Line.Brown], id: 71),
     Station(name: "Marymount", lines: [Line.Yellow], id: 72),
     Station(name: "Lorong Chuan", lines: [Line.Yellow], id: 73),
-    Station(name: "Serangoon", lines: [Line.Yellow, Line.Purple], id: 74),
+    Station(name: "Serangoon", lines: [Line.Purple, Line.Yellow,], id: 74),
     Station(name: "Bartley", lines: [Line.Yellow], id: 75),
     Station(name: "Tai Seng", lines: [Line.Yellow], id: 76),
-    Station(name: "MacPherson", lines: [Line.Yellow, Line.Blue], id: 77),
+    Station(name: "MacPherson", lines: [Line.Blue, Line.Yellow,], id: 77),
     Station(name: "Dakota", lines: [Line.Yellow], id: 78),
     Station(name: "Mountbatten", lines: [Line.Yellow], id: 79),
     Station(name: "Stadium", lines: [Line.Yellow], id: 80),
     Station(name: "Nicoll Highway", lines: [Line.Yellow], id: 81),
-    Station(name: "Promenade", lines: [Line.Yellow, Line.Blue], id: 82),
-    Station(name: "Bayfront", lines: [Line.CE, Line.Blue], id: 83),
+    Station(name: "Promenade", lines: [Line.Blue, Line.Yellow], id: 82),
+    Station(name: "Bayfront", lines: [Line.Blue, Line.CE], id: 83),
     Station(name: "Esplanade", lines: [Line.Yellow], id: 84),
     Station(name: "Bras Basah", lines: [Line.Yellow], id: 85),
     Station(name: "Bukit Panjang", lines: [Line.Blue, Line.BP], id: 86),
@@ -100,11 +100,11 @@ class Stations {
     Station(name: "Sixth Avenue", lines: [Line.Blue], id: 91),
     Station(name: "Tan Kah Kee", lines: [Line.Blue], id: 92),
     Station(name: "Stevens", lines: [Line.Blue], id: 93),
-    Station(name: "Little India", lines: [Line.Blue, Line.Purple], id: 94),
+    Station(name: "Little India", lines: [Line.Purple, Line.Blue], id: 94),
     Station(name: "Rochor", lines: [Line.Blue], id: 95),
     Station(name: "Downtown", lines: [Line.Blue], id: 96),
     Station(name: "Telok Ayer", lines: [Line.Blue], id: 97),
-    Station(name: "Chinatown", lines: [Line.Blue], id: 98),
+    Station(name: "Chinatown", lines: [Line.Blue, Line.Purple], id: 98),
     Station(name: "Fort Canning", lines: [Line.Blue], id: 99),
     Station(name: "Bencoolen", lines: [Line.Blue], id: 100),
     Station(name: "Jalan Besar", lines: [Line.Blue], id: 101),
@@ -149,8 +149,12 @@ class Stations {
     }
   }
 
-  static void changeColor(int id) {
+  static void changeNodeColor(int id) {
     colors[id] = calculateColor(id);
+  }
+
+  static void changeOnPathColor(int id, Line line) {
+    colors[id] = getColor(line);
   }
 
   static void resetColor(int id) {

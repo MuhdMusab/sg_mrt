@@ -3,20 +3,27 @@ import 'package:mrt_map/helper/line.dart';
 import 'package:mrt_map/data/stations.dart';
 
 class Graph {
-  static Line findCommonLine(List<Line> from, List<Line> to) {
-    for (int i = 0; i < from.length; i++) {
-      for (int j = 0; j < to.length; j++) {
-        if (from[i] == from[j]) {
-          return from[i];
+  static Line findCommonLine(List<Line> from, List<Line> to, Line fromLine) {
+    if (fromLine != Line.PE) {
+      for (int h = 0; h < to.length; h++) {
+        if (to[h] == fromLine) {
+          return fromLine;
         }
       }
     }
-    return Line.SW;
+      for (int i = 0; i < from.length; i++) {
+        for (int j = 0; j < to.length; j++) {
+          if (from[i] == to[j]) {
+            return from[i];
+          }
+        }
+      }
+      return Line.SW;
   }
   static Edge? getEdge(int fromId, int toId) {
     List<Line>? fromLines = Stations.stations[fromId].lines;
     List<Line>? toLines = Stations.stations[toId].lines;
-    Line commonLine = findCommonLine(fromLines!, toLines!);
+    Line commonLine = findCommonLine(fromLines!, toLines!, Line.PE);
     List<Edge> edges = getLine(commonLine);
     for (int i = 0; i < edges.length; i++) {
       if ((edges[i].getFirst() == fromId && edges[i].getSecond() == toId) ||
@@ -28,7 +35,6 @@ class Graph {
   }
 
   static List<Edge>? getAllEdges(int id) {
-    //print(id);
     List<Line>? lines = Stations.stations[id].lines;
     List<Edge> edgeList = [];
     for (int i = 0; i < lines!.length; i++) {
@@ -116,7 +122,7 @@ class Graph {
   ];
 
   static List<Edge> redLine = [
-    Edge(10, 35, 3),
+    Edge(9, 35, 3),
     Edge(35, 36, 2),
     Edge(36, 37, 3),
     Edge(37, 38, 3),
@@ -138,50 +144,50 @@ class Graph {
     Edge(53, 54, 2),
     Edge(54, 55, 2),
     Edge(55, 56, 1),
-    Edge(56, 57, 2),
-    Edge(57, 58, 2),
-    Edge(58, 59, 2),
+    Edge(56, 20, 2),
+    Edge(20, 19, 2),
+    Edge(19, 59, 2),
     Edge(59, 60, 2),
   ];
 
   static List<Edge> greenLine = [
     Edge(32, 31, 3),
-    Edge(31, 30, 3),
+    Edge(31, 30, 2),
     Edge(30, 29, 3),
     Edge(29, 28, 3),
     Edge(28, 27, 2),
     Edge(27, 26, 2),
-    Edge(26, 25, 3),
+    Edge(26, 25, 2),
     Edge(25, 24, 2),
-    Edge(24, 23, 3),
+    Edge(24, 23, 2),
     Edge(23, 22, 2),
     Edge(22, 21, 2),
-    Edge(21, 20, 3),
+    Edge(21, 20, 2),
     Edge(20, 19, 2),
     Edge(19, 18, 2),
     Edge(18, 17, 2),
-    Edge(17, 16, 3),
-    Edge(16, 15, 3),
+    Edge(17, 16, 2),
+    Edge(16, 15, 2),
     Edge(15, 14, 2),
-    Edge(14, 13, 3),
+    Edge(14, 13, 2),
     Edge(13, 12, 2),
-    Edge(12, 11, 3),
+    Edge(12, 11, 2),
     Edge(11, 10, 2),
-    Edge(10, 9, 5),
+    Edge(10, 9, 2),
     Edge(9, 8, 2),
-    Edge(8, 7, 3),
+    Edge(8, 7, 4),
     Edge(7, 6, 2),
-    Edge(6, 5, 3),
-    Edge(5, 4, 3),
+    Edge(6, 5, 2),
+    Edge(5, 4, 4),
     Edge(4, 3, 3),
-    Edge(3, 2, 3),
-    Edge(2, 1, 4),
-    Edge(1, 0, 3),
+    Edge(3, 2, 2),
+    Edge(2, 1, 2),
+    Edge(1, 0, 2),
   ];
 
   static List<Edge> cgLine = [
-    Edge(29, 33, 9),
-    Edge(33, 34, 5),
+    Edge(29, 33, 5),
+    Edge(33, 34, 8),
   ];
 
   static List<Edge> yellowLine = [

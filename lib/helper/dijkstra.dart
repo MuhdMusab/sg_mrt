@@ -3,18 +3,14 @@ import 'package:mrt_map/helper/treemap_priority_queue.dart';
 import 'package:mrt_map/model/station.dart';
 import 'package:mrt_map/model/edge.dart';
 import 'package:mrt_map/model/graph.dart';
+import 'package:mrt_map/helper/line.dart';
 class Dijkstra {
   TreeMapPriorityQueue pq = TreeMapPriorityQueue();
   List<int> weights = [];
   List<int> parentTree = [];
   List<bool> visitedTree = [];
-
-  void resetWeights() {
-    for (int i = 0; i < 133; i++) {
-      weights[i] = max;
-      visitedTree[i] = false;
-    }
-  }
+  List<Line> lineTree = [];
+  int _changeLineTime = 5;
 
   int shortestPathTime(int startId, int endId) {
     pq = TreeMapPriorityQueue();
@@ -25,21 +21,24 @@ class Dijkstra {
         weights.add(max);
         visitedTree.add(false);
         parentTree.add(max);
+        lineTree.add(Line.PE);
       }
     }
     for (int i = 0; i < 133; i++) {
       weights[i] = max;
       visitedTree[i] = false;
       parentTree[i] = max;
+      lineTree[i] = Line.PE;
     }
     pq.add(Stations.stations[startId]);
     weights[startId] = 0;
+    lineTree[startId] = Stations.stations[startId].lines![0];
     while (!pq.isEmpty()) {
       Station w = pq.extractMin();
-      visitedTree[w.id!] = true;
       if (w.id == endId) {
         return weights[endId];
       }
+      visitedTree[w.id!] = true;
       List<Edge> neighbours = Graph.getAllEdges(w.id!)!;
       for (int j = 0; j < neighbours.length; j++) {
         relax(neighbours[j], w.id!);
@@ -51,18 +50,52 @@ class Dijkstra {
   int? relax(Edge e, int from) {
     int to = e.getFirst() != from ? e.getFirst() : e.getSecond();
     int weight = e.getWeight();
-    if (weights[to] > weights[from] + weight) {
-      if (visitedTree[to]) {
-        return 0;
+    bool lineChanged = false;
+    if (visitedTree[to]) {
+      return 0;
+    }
+    if (parentTree[from] == max) {
+      lineTree[from] = Graph.findCommonLine(Stations.stations[from].lines!,
+          Stations.stations[to].lines!, Line.PE);
+      lineTree[to] = lineTree[from];
+    } else {
+      lineTree[to] = Graph.findCommonLine(Stations.stations[from].lines!,
+          Stations.stations[to].lines!, lineTree[from]);
+      lineChanged = (lineTree[from] != lineTree[to]);
+    }
+    if (lineChanged) {
+      lineChanged = false;
+      if (weights[to] > weights[from] + weight + _changeLineTime) {
+        weights[to] = weights[from] + weight + _changeLineTime;
+        if (pq.contains(to)) {
+          pq.decreasePriority(to, weights[to]);
+        } else {
+          Stations.stations[to].priority = weights[to];
+          pq.add(Stations.stations[to]);
+        }
+        parentTree[to] = from;
       }
-      weights[to] = weights[from] + weight;
-      if (pq.contains(to)) {
-        pq.decreasePriority(to, weights[to]);
-      } else {
-        Stations.stations[to].priority = weights[to];
-        pq.add(Stations.stations[to]);
+    } else {
+      if (weights[to] > weights[from] + weight) {
+
+        weights[to] = weights[from] + weight;
+        if (pq.contains(to)) {
+          pq.decreasePriority(to, weights[to]);
+        } else {
+          Stations.stations[to].priority = weights[to];
+          pq.add(Stations.stations[to]);
+        }
+        parentTree[to] = from;
       }
-      parentTree[to] = from;
+    }
+  }
+  void changeColor(int current) {
+    Stations.changeOnPathColor(current, lineTree[current]);
+  }
+
+  void changeStartColor(int id) {
+    if (parentTree[id] != max && parentTree[parentTree[id]] == max) {
+      lineTree[parentTree[id]] = lineTree[id];
     }
   }
 }

@@ -24,7 +24,7 @@ class TreeMapPriorityQueue {
 
   void add(Station stn){
     m_tree.add(stn);
-    m_map[stn.id!] = stn;//.put(k, n);
+    m_map[stn.id!] = stn;
   }
   bool contains(int id) {
     return m_map.containsKey(id);
@@ -33,7 +33,6 @@ class TreeMapPriorityQueue {
     return m_tree.length;
   }
   bool decreasePriority(int id, int newpriority){
-    print("yes");
     Station n = m_map[id]!;
     if (newpriority < n.priority) {
       m_tree.remove(n);;

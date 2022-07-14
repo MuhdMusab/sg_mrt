@@ -63,6 +63,11 @@ class TreeMapPriorityQueue {
     return m_tree.isEmpty;
   }
 
+  @override
+  String toString() {
+    return m_tree.toString();
+  }
+
 }
 
 

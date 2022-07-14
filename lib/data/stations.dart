@@ -60,9 +60,7 @@ class Stations {
     Station(name: "Newton", lines: [Line.Red, Line.Blue], id: 53),
     Station(name: "Orchard", lines: [Line.Red], id: 54),
     Station(name: "Somerset", lines: [Line.Red], id: 55),
-    Station(name: "Dhoby Ghaut",
-        lines: [Line.Red, Line.Purple, Line.Yellow],
-        id: 56),
+    Station(name: "Dhoby Ghaut", lines: [Line.Red, Line.Purple, Line.Yellow], id: 56),
     Station(name: "City Hall", lines: [Line.Red, Line.Green], id: 57),
     Station(name: "Raffles Place", lines: [Line.Red, Line.Green], id: 58),
     Station(name: "Marina Bay", lines: [Line.Red, Line.CE], id: 59),
@@ -140,6 +138,10 @@ class Stations {
     Station(name: "Teck Whye", lines: [Line.BP], id: 131),
     Station(name: "Keat Hong", lines: [Line.BP], id: 132),
   ];
+
+  static String getStationNameFromId(int id) {
+    return stations[id].name!;
+  }
 
   static List<Color> colors = [];
 

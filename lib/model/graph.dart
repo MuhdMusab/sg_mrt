@@ -11,14 +11,14 @@ class Graph {
         }
       }
     }
-      for (int i = 0; i < from.length; i++) {
-        for (int j = 0; j < to.length; j++) {
-          if (from[i] == to[j]) {
-            return from[i];
-          }
+    for (int i = 0; i < from.length; i++) {
+      for (int j = 0; j < to.length; j++) {
+        if (from[i] == to[j]) {
+          return from[i];
         }
       }
-      return Line.SW;
+    }
+    return Line.SW;
   }
   static Edge? getEdge(int fromId, int toId) {
     List<Line>? fromLines = Stations.stations[fromId].lines;
@@ -35,6 +35,7 @@ class Graph {
   }
 
   static List<Edge>? getAllEdges(int id) {
+
     List<Line>? lines = Stations.stations[id].lines;
     List<Edge> edgeList = [];
     for (int i = 0; i < lines!.length; i++) {
@@ -103,7 +104,7 @@ class Graph {
     Edge(112, 33, 2),
   ];
 
- static List<Edge> purpleLine = [
+  static List<Edge> purpleLine = [
     Edge(61, 17, 4),
     Edge(17, 98, 1),
     Edge(98, 113, 2),

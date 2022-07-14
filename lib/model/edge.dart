@@ -1,4 +1,6 @@
 
+import 'package:mrt_map/data/stations.dart';
+
 class Edge {
   int _first;
   int _second;
@@ -20,5 +22,9 @@ class Edge {
     return this._weight;
   }
 
+  @override
+  String toString() {
+    return 'First: ' + Stations.getStationNameFromId(_first) + 'Second: ' + Stations.getStationNameFromId(_second) + ' weight: ' + _weight.toString();
+  }
 
 }

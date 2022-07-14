@@ -33,6 +33,7 @@ class Station extends LinkedListEntry<Station> implements Comparable<Station>{
     return this.name!;
   }
 
+
   @override
   bool equals(Object other) {
     if (other is Station) {

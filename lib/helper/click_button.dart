@@ -13,10 +13,10 @@ int? _start;
 void _changePathColor(ClickButton widget, Dijkstra alg) {
   int current = widget.getStationId();
   while (current != max) {
-    alg.changeStartColor(current);
     alg.changeColor(current);
+    alg.addToRoute(current);
+    alg.changeStartColor(current);
     current = alg.parentTree[current];
-
   }
 }
 
@@ -26,13 +26,15 @@ class ClickButton extends StatefulWidget {
   double? _y;
   Function? notifyParent;
   Function? callbackFunction;
+  double? transferTime;
 
-  ClickButton(double x, double y, int stationId, Function? notifyParent, Function? callbackFunction) {
+  ClickButton(double x, double y, int stationId, Function? notifyParent, Function? callbackFunction, double? transferTime) {
     this._stationId = stationId;
     this._x = x;
     this._y = y;
     this.notifyParent = notifyParent;
     this.callbackFunction = callbackFunction;
+    this.transferTime = transferTime;
 
   }
 
@@ -45,14 +47,16 @@ class ClickButton extends StatefulWidget {
 }
 
 class _ClickButtonState extends State<ClickButton> {
+  List<int> emptyList = [];
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         child: Align(
           alignment: Alignment(widget._x!, widget._y!),
           child: Container(
-            width: 9,
-            height: 9,
+            width: 11,
+            height: 11,
             decoration: BoxDecoration(
               color: Stations.colors[widget._stationId!],
               borderRadius: BorderRadius.circular(20),
@@ -78,7 +82,7 @@ class _ClickButtonState extends State<ClickButton> {
                 _start = null;
                 widget.notifyParent!();
                 _colored = false;
-                widget.callbackFunction!(0, 0.0);
+                widget.callbackFunction!(0, false, emptyList, 0, Dijkstra(0));
               }),
             } else {
               setState(() {
@@ -95,17 +99,19 @@ class _ClickButtonState extends State<ClickButton> {
                 _count--;
                 Stations.resetColor(widget._stationId!);
                 _start = null;
-                widget.callbackFunction!(0, 0.0);
+                widget.callbackFunction!(0, false, emptyList, 0, Dijkstra(0));
               }),
             } else if (_first != _defaultStation) {
               setState(() {
                 _count--;
                 _first = _defaultStation;
                 _colored = true;
-                Dijkstra alg = Dijkstra();
+                Dijkstra alg = Dijkstra(widget.transferTime!);
                 int a = alg.shortestPathTime(_start!, widget._stationId!);
                 _changePathColor(widget, alg);
-                widget.callbackFunction!(a, 0.5);
+                List<int> routeTree = alg.getRouteTree();
+                int numberOfStops = alg.getNumberOfStops();
+                widget.callbackFunction!(a, true, routeTree, numberOfStops, alg);
                 widget.notifyParent!();
               }),
             }

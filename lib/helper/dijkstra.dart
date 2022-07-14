@@ -4,6 +4,7 @@ import 'package:mrt_map/model/station.dart';
 import 'package:mrt_map/model/edge.dart';
 import 'package:mrt_map/model/graph.dart';
 import 'package:mrt_map/helper/line.dart';
+
 class Dijkstra {
   TreeMapPriorityQueue pq = TreeMapPriorityQueue();
   List<int> weights = [];
@@ -11,6 +12,15 @@ class Dijkstra {
   List<bool> visitedTree = [];
   List<Line> lineTree = [];
   int _changeLineTime = 5;
+  List<int> routeList = [];
+  int numberOfStops = 0;
+  List<Line> routeLineTree = [];
+  List<bool> lineChangedTree = [];
+  List<bool> fullLineChangedTree = [];
+
+  Dijkstra(double transferTime) {
+    _changeLineTime = transferTime.round();
+  }
 
   int shortestPathTime(int startId, int endId) {
     pq = TreeMapPriorityQueue();
@@ -22,6 +32,7 @@ class Dijkstra {
         visitedTree.add(false);
         parentTree.add(max);
         lineTree.add(Line.PE);
+        fullLineChangedTree.add(false);
       }
     }
     for (int i = 0; i < 133; i++) {
@@ -29,16 +40,26 @@ class Dijkstra {
       visitedTree[i] = false;
       parentTree[i] = max;
       lineTree[i] = Line.PE;
+      fullLineChangedTree[i] = false;
     }
     pq.add(Stations.stations[startId]);
     weights[startId] = 0;
     lineTree[startId] = Stations.stations[startId].lines![0];
+    routeList = [];
+    routeLineTree = [];
+    lineChangedTree = [];
+    numberOfStops = 0;
     while (!pq.isEmpty()) {
       Station w = pq.extractMin();
       if (w.id == endId) {
         return weights[endId];
       }
       visitedTree[w.id!] = true;
+      if (w.id! != startId) {
+        lineTree[w.id!] = Graph.findCommonLine(Stations.stations[w.id!].lines!,
+            Stations.stations[parentTree[w.id!]].lines!, lineTree[w.id!]);
+
+      }
       List<Edge> neighbours = Graph.getAllEdges(w.id!)!;
       for (int j = 0; j < neighbours.length; j++) {
         relax(neighbours[j], w.id!);
@@ -47,12 +68,17 @@ class Dijkstra {
     return weights[endId];
   }
 
-  int? relax(Edge e, int from) {
-    int to = e.getFirst() != from ? e.getFirst() : e.getSecond();
+  void relax(Edge e, int from) {
+    int to = e.getFirst() != from
+        ? e.getFirst()
+        : e.getSecond() != from
+        ? e.getSecond()
+        : e.getFirst();
+
     int weight = e.getWeight();
     bool lineChanged = false;
     if (visitedTree[to]) {
-      return 0;
+      return;
     }
     if (parentTree[from] == max) {
       lineTree[from] = Graph.findCommonLine(Stations.stations[from].lines!,
@@ -64,6 +90,7 @@ class Dijkstra {
       lineChanged = (lineTree[from] != lineTree[to]);
     }
     if (lineChanged) {
+      fullLineChangedTree[to] = true;
       lineChanged = false;
       if (weights[to] > weights[from] + weight + _changeLineTime) {
         weights[to] = weights[from] + weight + _changeLineTime;
@@ -77,7 +104,6 @@ class Dijkstra {
       }
     } else {
       if (weights[to] > weights[from] + weight) {
-
         weights[to] = weights[from] + weight;
         if (pq.contains(to)) {
           pq.decreasePriority(to, weights[to]);
@@ -89,6 +115,7 @@ class Dijkstra {
       }
     }
   }
+
   void changeColor(int current) {
     Stations.changeOnPathColor(current, lineTree[current]);
   }
@@ -97,5 +124,28 @@ class Dijkstra {
     if (parentTree[id] != max && parentTree[parentTree[id]] == max) {
       lineTree[parentTree[id]] = lineTree[id];
     }
+  }
+
+  void addToRoute(int current) {
+    routeList.add(current);
+    routeLineTree.add(lineTree[current]);
+    lineChangedTree.add(fullLineChangedTree[current]);
+    numberOfStops++;
+  }
+
+  List<int> getRouteTree() {
+    return routeList;
+  }
+
+  int getNumberOfStops() {
+    return numberOfStops;
+  }
+
+  List<Line> getRouteLineTree() {
+    return routeLineTree;
+  }
+
+  List<bool> getLineChangedTree() {
+    return lineChangedTree;
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mrt_map/helper/dijkstra.dart';
 import 'package:mrt_map/helper/station_stack.dart';
 import 'package:mrt_map/helper/time_widget.dart';
+import 'package:mrt_map/helper/travel_time_dialog_box.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -10,15 +12,29 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   int time = 0;
-  double visibility = 0;
-  callback(varTime, varVisibility) {
+  List<int> _routeTree= [];
+  bool _isTimeButtonVisible = false;
+  double _transferTime = 5;
+  int _numberOfStops = 0;
+  Dijkstra? _alg;
+
+  _callback(int varTime, bool newVisibility, List<int> routeTree, int numberOfStops, Dijkstra alg) {
     setState(() {
       time = varTime;
-      visibility = varVisibility;
+      _isTimeButtonVisible = newVisibility;
+      _routeTree= routeTree;
+      _numberOfStops = numberOfStops;
+      _alg = alg;
     });
   }
+
+  _setTransferTime(double newTime) {
+    _transferTime = newTime;
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -46,15 +62,32 @@ class _HomepageState extends State<Homepage> {
                             )
                         )
                     ),
-                    child: StationStack(callbackFunction: callback),
+                    child: StationStack(callbackFunction: _callback, transferTime: _transferTime),
                   ),
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment(0.8, -0.8),
-              child: TimeWidget(time: time, visibility: visibility,),
-            ),
+            _isTimeButtonVisible
+                ? Align(
+                    alignment: Alignment(0.8, -0.8),
+                    child: TimeWidget(time: time, routeTree: _routeTree, numberOfStops: _numberOfStops, alg: _alg,),
+                    )
+                : Container(),
+            GestureDetector(
+              onTap: () {
+                showDialog(context: context, builder: (builder) {
+                  return TravelTimeDialogBox(transferFunction: _setTransferTime, transferTime: _transferTime);
+                });
+              },
+              child: Align(
+                alignment: Alignment(0.95, -0.8),
+                child: Icon(
+                  Icons.settings,
+                  size: 30,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+            )
           ],
         ),
       ),

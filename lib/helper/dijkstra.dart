@@ -52,13 +52,14 @@ class Dijkstra {
     while (!pq.isEmpty()) {
       Station w = pq.extractMin();
       if (w.id == endId) {
+        lineTree[w.id!] = Graph.findCommonLine(Stations.stations[w.id!].lines!,
+            Stations.stations[parentTree[w.id!]].lines!, lineTree[w.id!]);
         return weights[endId];
       }
       visitedTree[w.id!] = true;
       if (w.id! != startId) {
         lineTree[w.id!] = Graph.findCommonLine(Stations.stations[w.id!].lines!,
             Stations.stations[parentTree[w.id!]].lines!, lineTree[w.id!]);
-
       }
       List<Edge> neighbours = Graph.getAllEdges(w.id!)!;
       for (int j = 0; j < neighbours.length; j++) {
@@ -85,9 +86,18 @@ class Dijkstra {
           Stations.stations[to].lines!, Line.PE);
       lineTree[to] = lineTree[from];
     } else {
-      lineTree[to] = Graph.findCommonLine(Stations.stations[from].lines!,
-          Stations.stations[to].lines!, lineTree[from]);
-      lineChanged = (lineTree[from] != lineTree[to]);
+        lineTree[to] = Graph.findCommonLine(Stations.stations[from].lines!,
+            Stations.stations[to].lines!, lineTree[from]);
+        lineChanged = (lineTree[from] != lineTree[to]);
+      // if (to == 21 && from == 20 && parentTree[from] == 19) {
+      //   lineTree[to] = Line.Green;
+      //   lineTree[from] = Line.Green;
+      //   lineTree[parentTree[from]] = Line.Green;
+      // } else {
+      //   lineTree[to] = Graph.findCommonLine(Stations.stations[from].lines!,
+      //       Stations.stations[to].lines!, lineTree[from]);
+      //   lineChanged = (lineTree[from] != lineTree[to]);
+      // }
     }
     if (lineChanged) {
       fullLineChangedTree[to] = true;

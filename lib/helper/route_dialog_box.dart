@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:mrt_map/data/stations.dart';
 import 'package:mrt_map/helper/dijkstra.dart';
 import 'package:mrt_map/helper/line.dart';
+import 'package:mrt_map/widgets/last_station_timeline_tile_with_direction.dart';
 import 'package:mrt_map/widgets/station_timeline_tile.dart';
+import 'package:mrt_map/widgets/station_timeline_tile_with_direction.dart';
+import 'package:timelines/timelines.dart';
 
 class RouteDialogBox extends StatefulWidget {
   List<int>? routeTree;
@@ -28,12 +31,26 @@ class _RouteDialogBoxState extends State<RouteDialogBox> {
   }
   List<Line> colorList = [];
   List<bool> lineChangedList = [];
-
+  // Widget _buildExpandableContent(List<int> routeTree, List<Line> colorList, List<bool> lineChangedList) {
+  //   List<Widget> expandableStationTimeline = <Widget> [];
+  //   int length = routeTree.length;
+  //   int _lastIndex = routeTree.length - 1;
+  //
+  //
+  // }
   @override
   Widget build(BuildContext context) {
     int _lastIndex = widget.routeTree!.length - 1;
     colorList = widget.alg!.getRouteLineTree();
     lineChangedList = widget.alg!.getLineChangedTree();
+    // for (int i = _lastIndex; i > 0; i--) {
+    //   //   + ' ' + Stations.stations[widget.routeTree![i]].toString() + ' ' + Stations.stations[widget.routeTree![i - 1]].toString());
+    //   if (lineChangedList[i]) {
+    //      print(getDirection(widget.routeTree![i], widget.routeTree![i - 1], colorList[i - 1])
+    //        + ' ' + Stations.stations[widget.routeTree![i]].toString() + ' ' + Stations.stations[widget.routeTree![i - 1]].toString());
+    //   }
+    //   //getDirection(widget.routeTree![i], widget.routeTree![i - 1], colorList[i - 1]);
+    // }
     return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
@@ -164,50 +181,141 @@ class _RouteDialogBoxState extends State<RouteDialogBox> {
                                     ],),
                                 ),
                               ),
-                              StationTimelineTile(index: index, colorList: colorList, routeTree: widget.routeTree,),
+                              StationTimelineTileWithDirection(index: index, colorList: colorList, routeTree: widget.routeTree, lineChangedList: lineChangedList,),
                             ],
                           );
                         } else if (index == _lastIndex) {
-                          return Column(
-                            children: [
-                              StationTimelineTile(index: index, colorList: colorList, routeTree: widget.routeTree,),
-                              Card(
-                                child: Container(
-                                  width: 320,
-                                  height: 50,
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(width: 40,),
-                                      Icon(Icons.arrow_forward_rounded,
-                                        color: Color(0xFF154c79),
-                                        size: 20,
-                                      ),
-                                      Icon(Icons.circle,
-                                        color: Color(0xFF154c79),
-                                        size: 8,
-                                      ),
-                                      SizedBox(width: 10,),
-                                      Text('Arrive in ',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey.shade500,
+                          if (lineChangedList[_lastIndex - index]) {
+                            return Column(
+                              children: [
+                                LastStationTimelineTileWithDirection(index: index, colorList: colorList, routeTree: widget.routeTree,),
+                                Card(
+                                  child: Container(
+                                    width: 320,
+                                    height: 50,
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: 40,),
+                                        Icon(Icons.arrow_forward_rounded,
+                                          color: Color(0xFF154c79),
+                                          size: 20,
                                         ),
-                                      ),
-                                      Text(
-                                        widget.timeTaken! == 1
-                                            ? widget.timeTaken!.toString() + ' min'
-                                            : widget.timeTaken!.toString() + ' mins',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
+                                        Icon(Icons.circle,
+                                          color: Color(0xFF154c79),
+                                          size: 8,
                                         ),
-                                      ),
-                                    ],),
+                                        SizedBox(width: 10,),
+                                        Text('Arrive in ',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey.shade500,
+                                          ),
+                                        ),
+                                        Text(
+                                          widget.timeTaken! == 1
+                                              ? widget.timeTaken!.toString() + ' min'
+                                              : widget.timeTaken!.toString() + ' mins',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ],),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          );
+                              ],
+                            );
+                          }
+                            return Column(
+                              children: [
+                                StationTimelineTile(index: index, colorList: colorList, routeTree: widget.routeTree,),
+                                Card(
+                                  child: Container(
+                                    width: 320,
+                                    height: 50,
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: 40,),
+                                        Icon(Icons.arrow_forward_rounded,
+                                          color: Color(0xFF154c79),
+                                          size: 20,
+                                        ),
+                                        Icon(Icons.circle,
+                                          color: Color(0xFF154c79),
+                                          size: 8,
+                                        ),
+                                        SizedBox(width: 10,),
+                                        Text('Arrive in ',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey.shade500,
+                                          ),
+                                        ),
+                                        Text(
+                                          widget.timeTaken! == 1
+                                              ? widget.timeTaken!.toString() + ' min'
+                                              : widget.timeTaken!.toString() + ' mins',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ],),
+                                  ),
+                                ),
+                              ],
+                            );
+                        } else if (lineChangedList[_lastIndex - index]) {
+                          if (lineChangedList[_lastIndex - (index + 1)]) {
+                            return Column(
+                              children: [
+                                StationTimelineTileWithDirection(index: index, colorList: colorList, routeTree: widget.routeTree, lineChangedList: lineChangedList,),
+                                Card(
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        width: 320,
+                                        height: 50,
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            SizedBox(width: 30,),
+                                            Icon(Icons.arrow_forward_rounded,
+                                              color: Color(0xFF154c79),
+                                              size: 18,
+                                            ),
+                                            Icon(Icons.circle,
+                                              color: Color(0xFF154c79),
+                                              size: 8,
+                                            ),
+                                            Icon(Icons.arrow_forward_rounded,
+                                              color: Color(0xFF154c79),
+                                              size: 18,
+                                            ),
+                                            SizedBox(width: 10,),
+                                            Text('Change at ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.grey.shade500,
+                                              ),
+                                            ),
+                                            Text(
+                                              Stations.stations[widget.routeTree![_lastIndex - (index)]].toString(),
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return StationTimelineTileWithDirection(index: index, colorList: colorList, routeTree: widget.routeTree, lineChangedList: lineChangedList,);
                         } else if (lineChangedList[_lastIndex - (index + 1)]) {
                           return Column(
                             children: [

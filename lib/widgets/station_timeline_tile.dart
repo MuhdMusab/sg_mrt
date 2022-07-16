@@ -25,38 +25,25 @@ class _StationTimelineTileState extends State<StationTimelineTile> {
     int _lastIndex = widget.colorList!.length - 1;
     return TimelineTile(
       nodePosition: 0.2,
-      contents: Card(
-        child: Stack(
-          children: [
-            Container(
-              width: 200,
-              height: 50,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0,),
-                child: Center(
-                  child: Text(
-                    Stations.stations[widget.routeTree![_lastIndex - widget.index!]].toString(),
-                    style: TextStyle(
-                      color: getColor2(widget.colorList![_lastIndex -  widget.index!]),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+      contents: Center(
+        child: Card(
+          child: Container(
+            width: 200,
+            height: 50,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0,),
+              child: Center(
+                child: Text(
+                  Stations.stations[widget.routeTree![_lastIndex - widget.index!]].toString(),
+                  style: TextStyle(
+                    color: getColor2(widget.colorList![_lastIndex -  widget.index!]),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-            // Align(
-            //   alignment: Alignment(-0.9,0),
-            //   child: Text(
-            //     Stations.stations[widget.routeTree![_lastIndex - widget.index!]].toString(),
-            //     style: TextStyle(
-            //       color: getColor2(widget.colorList![_lastIndex -  widget.index!]),
-            //       fontSize: 20,
-            //       fontWeight: FontWeight.bold,
-            //     ),
-            //   ),
-            // ),
-          ],
+          ),
         ),
       ),
       node: TimelineNode(

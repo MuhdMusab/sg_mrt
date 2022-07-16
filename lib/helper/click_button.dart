@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mrt_map/data/stations.dart';
 import 'package:mrt_map/helper/custom_box_shadow.dart';
+import 'package:mrt_map/helper/line.dart';
 import 'package:mrt_map/model/station.dart';
 import 'package:mrt_map/helper/dijkstra.dart';
 
@@ -10,14 +11,35 @@ int _count = 0;
 bool _colored = false;
 int? _start;
 
-void _changePathColor(ClickButton widget, Dijkstra alg) {
+bool _changePathColor(ClickButton widget, Dijkstra alg) {
   int current = widget.getStationId();
+  bool shouldChange = false;
   while (current != max) {
-    alg.changeColor(current);
-    alg.addToRoute(current);
-    alg.changeStartColor(current);
-    current = alg.parentTree[current];
+    if (current == 21 && alg.parentTree[current] == 20 && alg.parentTree[alg.parentTree[current]] == 19 && alg.parentTree[alg.parentTree[alg.parentTree[current]]] == max) {
+      shouldChange = true;
+      alg.changeColor(current);
+      alg.addToRoute(current);
+      alg.changeStartColor(current);
+      current = alg.parentTree[current];
+      alg.lineTree[21] = Line.Green;
+      alg.lineTree[20] = Line.Green;
+      alg.lineTree[19] = Line.Green;
+    } else {
+      alg.changeColor(current);
+      alg.addToRoute(current);
+      alg.changeStartColor(current);
+      current = alg.parentTree[current];
+    }
   }
+  if (shouldChange) {
+    int routeLength = alg.routeList.length;
+    for (int i = 0; i < routeLength; i++) {
+      if (alg.routeList[i] == 21) {
+        alg.lineChangedTree[i] = false;
+      }
+    }
+  }
+  return shouldChange;
 }
 
 class ClickButton extends StatefulWidget {
@@ -108,7 +130,10 @@ class _ClickButtonState extends State<ClickButton> {
                 _colored = true;
                 Dijkstra alg = Dijkstra(widget.transferTime!);
                 int a = alg.shortestPathTime(_start!, widget._stationId!);
-                _changePathColor(widget, alg);
+                bool shouldChange = _changePathColor(widget, alg);
+                if (shouldChange) {
+                  a -= widget.transferTime!.round();
+                }
                 List<int> routeTree = alg.getRouteTree();
                 int numberOfStops = alg.getNumberOfStops();
                 widget.callbackFunction!(a, true, routeTree, numberOfStops, alg);

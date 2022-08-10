@@ -1,7 +1,7 @@
-# MRT Map
+# SG MRT (route navigation)
 
-## APK download link:
-https://drive.google.com/file/d/1i15m2b3MtFjzRedFH2Kboi3tW2hgG24O/view?usp=sharing
+## Installing:
+[Google Play Store](https://play.google.com/store/apps/details?id=com.mrt_map)
 
 ## Screens
 <div align='center'>

@@ -21,7 +21,7 @@ class Stations {
     Station(name: "Queenstown", lines: [Line.Green], id: 14),
     Station(name: "Redhill", lines: [Line.Green], id: 15),
     Station(name: "Tiong Bahru", lines: [Line.Green], id: 16),
-    Station(name: "Outram Park", lines: [Line.Green, Line.Purple], id: 17),
+    Station(name: "Outram Park", lines: [Line.Green, Line.Purple, Line.Brown], id: 17),
     Station(name: "Tanjong Pagar", lines: [Line.Green], id: 18),
     Station(name: "Raffles Place", lines: [Line.Red, Line.Green], id: 19),
     Station(name: "City Hall", lines: [Line.Red, Line.Green], id: 20),
@@ -58,12 +58,12 @@ class Stations {
     Station(name: "Toa Payoh", lines: [Line.Red], id: 51),
     Station(name: "Novena", lines: [Line.Red], id: 52),
     Station(name: "Newton", lines: [Line.Red, Line.Blue], id: 53),
-    Station(name: "Orchard", lines: [Line.Red], id: 54),
+    Station(name: "Orchard", lines: [Line.Red, Line.Brown], id: 54),
     Station(name: "Somerset", lines: [Line.Red], id: 55),
     Station(name: "Dhoby Ghaut", lines: [Line.Red, Line.Purple, Line.Yellow], id: 56),
     Station(name: "City Hall", lines: [Line.Red, Line.Green], id: 57),
     Station(name: "Raffles Place", lines: [Line.Red, Line.Green], id: 58),
-    Station(name: "Marina Bay", lines: [Line.Red, Line.CE], id: 59),
+    Station(name: "Marina Bay", lines: [Line.Red, Line.CE, Line.Brown], id: 59),
     Station(name: "Marina South Pier", lines: [Line.Red], id: 60),
     Station(name: "HarbourFront", lines: [Line.Yellow, Line.Purple], id: 61),
     Station(name: "Telok Blangah", lines: [Line.Yellow], id: 62),
@@ -97,7 +97,7 @@ class Stations {
     Station(name: "King Albert Park", lines: [Line.Blue], id: 90),
     Station(name: "Sixth Avenue", lines: [Line.Blue], id: 91),
     Station(name: "Tan Kah Kee", lines: [Line.Blue], id: 92),
-    Station(name: "Stevens", lines: [Line.Blue], id: 93),
+    Station(name: "Stevens", lines: [Line.Blue, Line.Brown], id: 93),
     Station(name: "Little India", lines: [Line.Purple, Line.Blue], id: 94),
     Station(name: "Rochor", lines: [Line.Blue], id: 95),
     Station(name: "Downtown", lines: [Line.Blue], id: 96),
@@ -134,9 +134,13 @@ class Stations {
     Station(name: "Mayflower", lines: [Line.Brown], id: 127),
     Station(name: "Bright Hill", lines: [Line.Brown], id: 128),
     Station(name: "Upper Thomson", lines: [Line.Brown], id: 129),
-    Station(name: "Phoenix", lines: [Line.BP], id: 130),
-    Station(name: "Teck Whye", lines: [Line.BP], id: 131),
-    Station(name: "Keat Hong", lines: [Line.BP], id: 132),
+    Station(name: "Napier", lines: [Line.Brown], id: 130),
+    Station(name: "Orchard Boulevard", lines: [Line.Brown], id: 131),
+    Station(name: "Great World", lines: [Line.Brown], id: 132),
+    Station(name: "Havelock", lines: [Line.Brown], id: 133),
+    Station(name: "Maxwell", lines: [Line.Brown], id: 134),
+    Station(name: "Shenton Way", lines: [Line.Brown], id: 135),
+    Station(name: "Gardens by the Bay", lines: [Line.Brown], id: 136),
   ];
 
   static String getStationNameFromId(int id) {
@@ -146,7 +150,7 @@ class Stations {
   static List<Color> colors = [];
 
   static void initialiseColors() {
-    for (int i = 0; i < 133; i++) {
+    for (int i = 0; i < 137; i++) {
       colors.add(Colors.grey.withOpacity(0.5));
     }
   }
@@ -164,7 +168,7 @@ class Stations {
   }
 
   static void resetAll() {
-    for (int i = 0; i < 133; i++) {
+    for (int i = 0; i < 137; i++) {
       colors[i] = (Colors.grey.withOpacity(0.5));
     }
   }
